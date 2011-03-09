@@ -32,6 +32,7 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #sorry I'm a C guy commands shall end with ; as long as I'm here 
+# that's pretty stupid, you should be sorry about it
 
 import time
 import twitter
@@ -62,9 +63,9 @@ last_reply_id=0;
 
 version_number = "0.1c RC1";
 
-#printl appends linefeeds ...
+#printl appends carriage returns ...
 def printl(string):
-	print (string+"");#add char here
+	print (string+"\r");
 
 #------------------------------------------------------------
 #time date functions
@@ -294,7 +295,7 @@ def main(argv):
   
 	'''Get the options list'''
 	try:
-		opts, args = getopt.getopt(argv, "hvrp:", ["help", "version","read","post"] );
+		opts, args = getopt.getopt(argv, "hvrp:", ["help", "version","read","post="] );
     
 	except getopt.GetoptError:
 		usage();
