@@ -81,7 +81,7 @@ def current_time():
 #usage
 def usage():
 	printl("");
-	printl("Usage: twitshell.py [-p message_content] [-d]");
+	printl("Usage: twitshell.py [-p message_content] [-r]");
 	printl("Options:");
 	printl("	-h		Show this help and exit --help");
 	printl("	-v		Version information --version");
