@@ -148,21 +148,21 @@ def command():
 	printl("");
 
 	if not cmd: # command input was empty 
-		return 2; # do nothing
+		return True; # do nothing
 
 	if cmd=="about":
 		about();
-		return 2;
+		return True;
 
 	if cmd=="?" or cmd=="help":
 		help(); # prints help text
-		return 2;
+		return True;
 
 	if cmd=="post":
 		printl("Type message, maximum 140 characters, newline to finish");
 		printl("Feel free to include you name so others know who's posting");
 		inputs=str(raw_input("> "));
-		if not 10 <= len(inputs):
+		if len(inputs) <= 10:
 			printl("Message must be more than 10 characters");
 
 			while(1):
@@ -173,13 +173,13 @@ def command():
 				if i=="no":
 					break;
 				printl("Yes or No");
-			return 2
+			return True
 
-		if not len(inputs) <= 140:
+		if len(inputs) > 140:
 			printl("Message must be less than 140 characters");
-			return 2;
+			return True;
 		post(inputs);
-		return 2;
+		return True;
 
 	#deletes the last post
 	if cmd=="delete":
@@ -191,17 +191,17 @@ def command():
 			if i=="no":
 				break;
 			printl("Please type Yes or No");
-		return 2
+		return True
 
 	#undelete's the last post if it was deleted
 	if cmd=="undelete":
 		undelete();
-		return 2;
+		return True;
 		
 	#read command
 	if cmd=="read" or cmd=="view":
 		read_replies();
-		return 2;
+		return True;
 
 
 	#exit command
@@ -209,13 +209,13 @@ def command():
 		q=str(raw_input("Really [Yes/No]\a")).lower();
 		if q=="y" or q=="yes":
 			printl("Goodbye");
-			return 0;
+			return False;
 		else:
 			printl("Thank You");
-			return 2;
+			return True;
 	
 	bad_cmd();
-	return 2;
+	return True;
 
 #------------------------------------------------------------
 #posts to twitter, prompts for deletion to allow the user to remove mistakes
@@ -317,21 +317,15 @@ def main(argv):
 
 	'''Main Interactive Command Prompt'''  
 	printl("\a");
-	i=1;
+	loopForever = True
+	firstStart = True
 
-	while(1):
-		if i==0:
-			break;
-		if i==1:
-			banner();
-			replies();
-			i=command();
-		if i==2:
-			replies();
-			i=command();
-
-		printl("error i is:"+str(i)+" setting i to 2");
-		i=2;
+	while(loopForever):
+		if firstStart:
+			banner()
+			firstStart = False
+		replies()
+		loopForever = command()
 
 
 if __name__ == "__main__":
