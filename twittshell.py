@@ -263,31 +263,31 @@ def undelete():
 #------------------------------------------------------------
 #get replies
 
-def replies(): #displays latest reply and # of replies
+def replies(): #displays # of replies
 	global last_reply_id;
 	reply=api.GetReplies(None,last_reply_id);
-	i=len(reply)-1;
 	printl(str(len(reply))+" New Replies: Type 'read' to read the replies");
 
-def read_replies(): #displays latest reply and # of replies
+def read_replies(): #displays latest replies
 	global last_reply_id;
 
-	reply=api.GetReplies(None,last_reply_id); #download replies every view of a reply
-	i=len(reply)-1;
+	replyList=api.GetReplies(None,last_reply_id); #download replies every view of a reply
 	
-	while 1:
-		if i==-1:
-			break;
+	replyList.reverse()
+	
+	for reply in replyList:
 
-		last_reply_id=reply[i].id;
+		last_reply_id=reply.id
 
-		printl("    "+reply[i].user.screen_name+" said: "+reply[i].text);
-		printl("In reply to "+reply[i].in_reply_to_screen_name+": "+api.GetStatus(reply[i].in_reply_to_status_id).text+"\n");
-
-		reply=api.GetReplies(None,last_reply_id); #download replies every view of a reply
-		i=len(reply)-1;
+		printl("    "+reply.user.screen_name+" said: "+reply.text)
 		
-		time.sleep(2);
+		if reply.in_reply_to_status_id != None:
+			printl("In reply to "+reply.in_reply_to_screen_name+":")
+			printl(api.GetStatus(reply.in_reply_to_status_id).text+"\n")
+		
+		last_reply_id=reply.id
+		
+		time.sleep(2)
 
 #------------------------------------------------------------
 #its the main one ...
