@@ -59,6 +59,7 @@ last_deleted_message='';
 last_status = twitter.Status();
 current_timezone=(time.timezone/60)/60; # Timezone
 status_update_delay=0;#api.MaximumHitFrequency()
+time_of_last_hit = int ( time.time() )
 last_reply_id=0;
 
 version_number = "0.1c RC1";
@@ -76,6 +77,43 @@ def current_time_date():
 def current_time():
 	timen=time.gmtime();
 	return str(timen[3]-current_timezone)+":"+str(timen[4]);
+
+def getRateLimit(api):
+	'''Returns the time in seconds that the program must wait before hitting the API again in order to not exceed the rate limit. If the limit has already been reached, the return value will be the time in seconds until the hourly reset'''
+	
+	MaxHitFrequency = api.MaximumHitFrequency()
+	current_time = int ( time.time() )
+	global time_of_last_hit
+	
+	#what if rate limit has already been reached?
+	#WARNING - MaximumHitFrequency() has been patched and may not always return 0 when rate limit reached
+	if 0 == MaxHitFrequency:
+		limit = api.GetRateLimitStatus()
+		return limit["reset_time_in_seconds"] - current_time
+	
+	#otherwise...
+	time_since_last_hit = current_time - time_of_last_hit
+	
+	time_to_wait = MaxHitFrequency - time_since_last_hit
+	
+	if time_to_wait > 0:
+		return time_to_wait
+	else:
+		return 0
+
+def logHit():
+	'''Updates the global variable time_of_last_hit to the current time'''
+	global time_of_last_hit
+	time_of_last_hit = int( time.time() )
+
+
+def showRateInfo(api):
+	apiStatus = api.GetRateLimitStatus()
+	
+	printl("You have " + str(apiStatus["remaining_hits"]) + " API actions remaining")
+	
+	printl("You may currently perform an API action every" + str( api.MaximumHitFrequency() ) + " seconds" )
+	printl("You must wait " + str( getRateLimit(api) ) + " seconds before your next API action")
 
 #------------------------------------------------------------
 #usage
@@ -111,7 +149,9 @@ def about():
 	printl("");
 	printl("This Program is licensed under the Modified BSD license");
 	printl("	Program Copyright (C) 2011 Jason White\n");
+	
 #------------------------------------------------------------
+
 #The Banner
 def banner():
 	printl("	Twitter Shell Version "+version_number);
@@ -202,6 +242,11 @@ def command():
 	if cmd=="read" or cmd=="view":
 		read_replies();
 		return True;
+	
+	#show rate information
+	if cmd=="rateinfo":
+		showRateInfo(api)
+		return True
 
 
 	#exit command
@@ -268,6 +313,7 @@ def replies(): #displays # of replies
 	reply=api.GetReplies(None,last_reply_id);
 	printl(str(len(reply))+" New Replies: Type 'read' to read the replies");
 
+
 def read_replies(): #displays latest replies
 	global last_reply_id;
 
@@ -289,6 +335,7 @@ def read_replies(): #displays latest replies
 
 #------------------------------------------------------------
 #its the main one ...
+
 def main(argv):
   
 	'''Get the options list'''
