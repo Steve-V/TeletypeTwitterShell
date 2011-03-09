@@ -277,8 +277,6 @@ def read_replies(): #displays latest replies
 	
 	for reply in replyList:
 
-		last_reply_id=reply.id
-
 		printl("    "+reply.user.screen_name+" said: "+reply.text)
 		
 		if reply.in_reply_to_status_id != None:
