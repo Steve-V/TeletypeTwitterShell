@@ -37,7 +37,10 @@ def main():
   print "check"
   
   #twa.replies()
-  
+  #twa.post("frobz4")
+  #twa.delete()
+  #twa.undelete()
+  twa.read_replies()
   
 if __name__ == '__main__':
   main()
