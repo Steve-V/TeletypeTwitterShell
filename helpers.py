@@ -1,4 +1,18 @@
+import time
+
 version_number = "0.14";
+current_timezone=(time.timezone/60)/60; # Timezone
+
+#time date functions, returns string
+def current_time_date():
+  timen=time.gmtime();
+  return str(timen[3]-current_timezone)+":"+str(timen[4])+" "+str(timen[1])+"-"+str(timen[2])+"-"+str(timen[0]);
+
+def current_time():
+  timen=time.gmtime();
+  return str(timen[3]-current_timezone)+":"+str(timen[4]);
+
+
 
 #------------------------------------------------------------
 #printl appends carriage returns ...
