@@ -12,8 +12,6 @@ def current_time():
   timen=time.gmtime();
   return str(timen[3]-current_timezone)+":"+str(timen[4]);
 
-
-
 #------------------------------------------------------------
 #printl appends carriage returns ...
 def printl(string):

@@ -101,4 +101,3 @@ class twitterapi:
       self.last_reply_id = reply.id
       time.sleep(2)
   
-  
